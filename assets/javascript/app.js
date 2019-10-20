@@ -31,6 +31,8 @@ function randomize (value) {
     return (Math.floor(Math.random() * value));
 }
 
+
+
 //FUNCTIONS
 //initialize is run for each time we have a new question to show
 function initialize () {
@@ -58,11 +60,28 @@ function initialize () {
 
     let html = `<ul>`;
     incorrect.map(function(choice) {
-        html += `<li>${choice}</li>`
+        html += `<li class="choice">${choice}</li>`;
     });
+
+    function isCorrect() {
+        
+        let message = $(this).html() === correct ? "Correct!" : `Incorrect! The answer was ${correct}`;
+
+        let html = `<div>
+                        <div>${message}</div>
+                        <img src="${img}">
+                    </div>`
+        $("#multiple-choice").empty();
+        $("#question").html(html);
+
+    }
     
     $("#question").html(question);
     $("#multiple-choice").html(html + "</ul>");
+
+    $(".choice").on("click", isCorrect);
+
+    
 
 }
 
