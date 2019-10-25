@@ -9,24 +9,40 @@
         <title>Trivia Game</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css?family=Noto+Serif&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="./assets/css/style.css">
     </head>
     <body>
     
-    <div class="main-wrapper">
+    <div class="container min-100">
+        
+        <div class="row">
 
-       <div class="main-header">Totally Trivial Trivia!</div><br>
+            <div class="col-2"></div>
 
-       <div id="timer"></div><br>
+            <div class="col-8 main-content">
 
-       <div id="question"></div><br>
-    
-        <div id="multiple-choice"></div><br>
-    
-        <button type="button" class="btn btn-primary" id="start">Start</div>
-       <!-- <button type="button" class="btn btn-primary" id="restart">Start Over?</div> -->
-    
+                <div class="header-line">
+                    <span class="main-header-berkeley">UC Berkeley  </span>
+                    <span class="main-header">Trivial Trivia</span><br>
+                </div>
+
+                <div id="timer"></div><br>
+
+                <div id="question"></div><br>
+                
+                    <div id="multiple-choice"></div><br>
+                
+                    <button type="button" class="btn btn-primary" id="start">Start</div>
+            
+            </div>
+
+            <div class="col-2"></div>
+
+            
+        </div>
     </div>
 
 
