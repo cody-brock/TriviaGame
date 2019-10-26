@@ -1,10 +1,13 @@
+//puts everything into one overall function, so can restart more easily
 function startGame () {
+    //contstucts questions using class
     class TriviaCards {
         constructor (question, correct, incorrect, img, fact) {
             Object.assign(this,{question, correct, incorrect, img, fact});
         }
     }
 
+    //feeds information into constructor
     let questions = [
         questionOne = new TriviaCards (
             'Completed in 1873, what is the oldest building on campus?',
@@ -67,7 +70,7 @@ function startGame () {
             'Fiat Lux',
             ['Carpe Diem', 'Alma Mater', 'Quid Pro Quo'],
             './assets/images/fiat_lux.png',
-            'Pictured above, the motto atop the center of Sather Gate'
+            'Pictured above, the motto is front, top, and center on Sather Gate'
         ),
         questionTen = new TriviaCards (
             'What is the trophy given to the winner of the Cal vs. Stanford Big Game each year?',
@@ -78,18 +81,24 @@ function startGame () {
         ),
     ]
 
-    //global variables
+    //Results tallies
     var correctAnswers = 0;
     var incorrectAnswers = 0;
     var unAnswered = 0;
 
-    //creates a randomizer to use in the future
+    //creates a randomizer method to use in the future for choosing the question
     function randomize (value) {
         return (Math.floor(Math.random() * value));
     }
 
-    function buildPlaylist (value) {
-        value.randomize();
+    //this method is used to display "Correct/Incorrect/TimeUp" + picture + fact to DOM
+    function answerAndPicture (messageVar, imgVar, factVar) {
+        let content = `<div>
+                        <div style="font-weight: heavy;">${messageVar}</div>
+                        <img style="height: 300px; width: 450px;" src="${imgVar}" class="img-thumbnail"><br>
+                        <span style"font-weight: heavy;">Fun Fact:</span> <span style="font-style: italic;">${factVar}</span>
+                    </div>`
+        return content;
     }
 
     initialize();
@@ -97,7 +106,7 @@ function startGame () {
     //FUNCTIONS
     //initialize is run for each time we have a new question to show
     function initialize () {
-        //TIMER
+        //TIMER code
         let intervalId;
         clearInterval(intervalId);
         let number = 30;
@@ -107,34 +116,31 @@ function startGame () {
             number--;
             $("#timer").html(`Time Remaining: <strong>${number}</strong>`);
 
+            //if runs out of time, stop clock and show answer, then move on
             if (number <= 0) {
                 clearInterval(intervalId);
                 setTimeout(function() {initialize(); }, 6000);
                 let message = `Time is Up!<br>The answer was: ${correct}`;
-                let html = `<div>
-                                <div style="font-weight: heavy;">${message}</div>
-                                <img style="height: 300px; width: 450px;" src="${img}" class="img-thumbnail"><br>
-                                <span style"font-weight: heavy;">Fun Fact:</span> <span style="font-style: italic;">${fact}</span>
-                            </div>`
+                let html = answerAndPicture (message, img, fact);
                 $("#multiple-choice").empty();
                 $("#question").html(html);
 
-                //removes current question from questions array, so can't be repeated
-                // console.log("questions before", questions)
+                //tallies unanswered count, removes current question from questions array
                 unAnswered++;
-                console.log(unAnswered);
                 questions.splice(randIndex, 1);
-                // console.log("questions after", questions)
-                
             }
         }
-        //END TIMER
 
+        //If we go through all questions...
         if (questions.length <= 0) {
             clearInterval(intervalId);
+
+            //start button reappears to restart the game
+            $("#start").html("Restart?");
             $("#start").show();
 
-            $("#question").html('All done, here\'s how you did');
+            //shows summary of player's performance
+            $("#question").html('All done, here\'s how you did:');
             let html =  `<div>
                             <div>Correct Answers: ${correctAnswers}</div>
                             <div>Incorrect Answers: ${incorrectAnswers}</div>
@@ -145,15 +151,17 @@ function startGame () {
             return
         }
 
-        //
-        let objArr = Object.values(questions);
-        console.log(objArr);
+        //QUESTION/ANSWER RANDOMIZER
+        //uses randomize method to get a random number of current questions array length
+        let randIndex = randomize(questions.length);
 
-        let randIndex = randomize(objArr.length);
-        let [question, correct, incorrect, img, fact] = Object.values(objArr[randIndex]);
-        console.log(objArr[randIndex]);
+        //puts relevant values into these variables, so they're easier to work with
+        let [question, correct, incorrect, img, fact] = Object.values(questions[randIndex]);
 
+        //pushes the correct answer into the same array as the incorrect answers, so they can be shuffled
         incorrect.push(correct);
+
+        //shuffles the 4 possible answers.  Similar to Fisher-Yates.
         for (let i = 0; i < 3; i++) {
             if (randomize(100) > 50) {
                 let temp = incorrect[i];
@@ -162,16 +170,17 @@ function startGame () {
             }
         }
 
-        //turns choices into a list on DOM
+        //puts those 4 possible answers (choices) into a list on DOM
         let html = `<ul>`;
         incorrect.map(function(choice) {
             html += `<li class="choice">${choice}</li>`;
         });
 
+    
         //Checks if answer is correct and displays results accordingly with image
         function isCorrect() {
 
-            //dtermines if answer is correct, gives info for message and increments counter
+            //determines if answer is correct, gives info for on-screen message and increments counter
             if ($(this).html() === correct) {
                 var message = "Correct!";
                 correctAnswers++;
@@ -179,41 +188,24 @@ function startGame () {
                 var message = `Incorrect! The answer was: <br>${correct}<br>`;
                 incorrectAnswers++;
             }
-            console.log(correctAnswers, incorrectAnswers);
 
-            // let message = $(this).html() === correct ? "Correct!" : `Incorrect! The answer was ${correct}`;
-            let html = `<div>
-                            <div>${message}</div>
-                            <img style="height: 300px; width: 450px;" src="${img}" class="img-thumbnail"><br>
-                            <span style"font-weight: heavy;">Fun Fact:</span> <span style="font-style: italic;">${fact}</span>
-                        </div>`
             $("#multiple-choice").empty();
+            let html = answerAndPicture (message, img, fact);
             $("#question").html(html);
 
             clearInterval(intervalId);
             setTimeout(function() {initialize(); }, 6000);
             
-            
-
             //removes current question from questions array, so can't be repeated
-            //  console.log("questions before", questions);
             questions.splice(randIndex, 1);
-            //  console.log("questions after", questions);
-
         }
         
+        //feeds content to the DOM
         $("#question").html(question);
         $("#multiple-choice").html(html + "</ul>");
-
         $(".choice").on("click", isCorrect);
-
-        
-
     }
 }
-
-
-    
 
 //CLICK HANDLERS
 $("#start").on("click", function() {
