@@ -100,7 +100,7 @@ function startGame () {
         //TIMER
         let intervalId;
         clearInterval(intervalId);
-        let number = 10;
+        let number = 30;
         $("#timer").html(`Time Remaining: <strong>${number}</strong>`);
         intervalId = setInterval(decrement, 1000);
         function decrement () {
@@ -109,7 +109,7 @@ function startGame () {
 
             if (number <= 0) {
                 clearInterval(intervalId);
-                setTimeout(function() {initialize(); }, 3000);
+                setTimeout(function() {initialize(); }, 6000);
                 let message = `Time is Up!<br>The answer was: ${correct}`;
                 let html = `<div>
                                 <div style="font-weight: heavy;">${message}</div>
@@ -191,7 +191,7 @@ function startGame () {
             $("#question").html(html);
 
             clearInterval(intervalId);
-            setTimeout(function() {initialize(); }, 5000);
+            setTimeout(function() {initialize(); }, 6000);
             
             
 
